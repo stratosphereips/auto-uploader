@@ -38,7 +38,7 @@ for FLDR in $FOLDERS; do
     # Size of pcap do an ls -lh
     # Go to jin
     # The base folder is /opt/Malware-Project/BigDataset/IoTScenarios/
-    LAST_FOLDER=`ssh -p 902 yury@mcfp.felk.cvut.cz ls -d /opt/Malware-Project/BigDataset/IoTScenarios/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
+    LAST_FOLDER=`ssh -p 902 project@mcfp.felk.cvut.cz ls -d /opt/Malware-Project/BigDataset/IoTScenarios/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
     echo $FILES_IN_JIN
     NEW_INDEX=`echo $LAST_FOLDER | awk -F'-' '{print $6+1}'`
     # sort ls by name
@@ -52,10 +52,15 @@ for FLDR in $FOLDERS; do
        # create a new folder
        NEW_FOLDER="/opt/Malware-Project/BigDataset/IoTScenarios/${DATASET_FOLDER_JIN}-${NEW_INDEX}"
 	FOLDERS+=($NEW_FOLDER)
-       #	`ssh -p 902 yury@mcfp.felk.cvut.cz mkdir $NEW_FOLDER` 
-#	`scp -C $FILE yury@mcfp.felk.cvut.cz:$NEW_FOLDER`
-#	`scp -C $README yury@mcfp.felk.cvut.cz:$NEW_FOLDER`
-#	`ssh -p 902 yury@mcfp.felk.cvut.cz ln -s $NEW_FOLDER /opt/Malware-Project/Dataset/NonPublic/$DATASET_FOLDER_JIN-$NEW_INDEX`
+       	`ssh -p 902 project@mcfp.felk.cvut.cz mkdir $NEW_FOLDER` 
+	echo "CREATED FOLDER"
+	echo $FILE
+	echo $NEW_FOLDER
+	`scp -P 902 -C $FILE project@mcfp.felk.cvut.cz:$NEW_FOLDER`
+	echo "UPLOADED FILE"
+	`scp -P 902 -C $README project@mcfp.felk.cvut.cz:$NEW_FOLDER`
+	echo "UPLOADED README"
+	`ssh -p 902 project@mcfp.felk.cvut.cz ln -s $NEW_FOLDER /opt/Malware-Project/Dataset/NonPublic/$DATASET_FOLDER_JIN-$NEW_INDEX`
         NEW_INDEX=$((NEW_INDEX+1))
 	echo $NEW_FOLDER
     done 
