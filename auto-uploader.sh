@@ -38,8 +38,10 @@ for FLDR in $FOLDERS; do
     # Size of pcap do an ls -lh
     # Go to jin
     # The base folder is /opt/Malware-Project/BigDataset/IoTScenarios/
-    FILES_IN_JIN=`ssh -p 902 project@jin ls -d /opt/Malware-Project/BigDataset/IoTScenarios/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
+    LAST_FOLDER=`ssh -p 902 project@jin ls -d /opt/Malware-Project/BigDataset/IoTScenarios/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
     echo $FILES_IN_JIN
+    NEW_INDEX=`echo $LAST_FOLDER | awk -F'-' '{print $6+1}'`
+    `ssh -p 902 project@jin mkdir /opt/Malware-Project/BigDataset/IoTScenarios/$DATASET_FOLDER_JIN-$NEW_INDEX` 
     # sort ls by name
     # Find the last number used for my folder
     # if first, empty answer. If not, get the last number
