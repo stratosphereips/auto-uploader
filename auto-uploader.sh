@@ -38,7 +38,8 @@ for FLDR in $FOLDERS; do
     # Size of pcap do an ls -lh
     # Go to jin
     # The base folder is /opt/Malware-Project/BigDataset/IoTScenarios/
-    FILES_IN_JIN=`ssh -p 902 project@jin ls /opt/Malware-Project/BigDataset/IoTScenarios/$DATASET_FOLDER_JIN*`
+    FILES_IN_JIN=`ssh -p 902 project@jin ls -d /opt/Malware-Project/BigDataset/IoTScenarios/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
+    echo $FILES_IN_JIN
     # sort ls by name
     # Find the last number used for my folder
     # if first, empty answer. If not, get the last number
@@ -50,7 +51,7 @@ for FLDR in $FOLDERS; do
     # Run pcapsummarizer-iot.sh. first arg is the folder name.
     # link
     # ln -s /opt/Malware-Project/BigDataset/IoTScenarios/CTU-IoT-Malware-Capture-8-3 /opt/Malware-Project/Dataset/NonPublic/
-    echo 
+    #echo 
 done
 
 # To print a CSV with all the info
