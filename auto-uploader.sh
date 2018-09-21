@@ -26,7 +26,6 @@ BASE_FOLDER_JIN="~/Test/"
 
 
 for FLDR in $FOLDERS; do 
-    #echo $FLDR
     cd $FLDR
     # Extract from README.md
     README='README.md'
@@ -46,7 +45,7 @@ for FLDR in $FOLDERS; do
     # Size of pcap do an ls -lh
     # Go to jin
     # The base folder is /opt/Malware-Project/BigDataset/IoTScenarios/
-    LAST_FOLDER=`ssh -p 902 yury@mcfp.felk.cvut.cz ls -d $BASE_FOLDER_JIN/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
+    LAST_FOLDER=`ssh -p 902 project@mcfp.felk.cvut.cz ls -d $BASE_FOLDER_JIN/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
     echo $LAST_FOLDER
     NEW_INDEX=`echo $LAST_FOLDER | awk -F'-' '{print $6+1}'`
     # sort ls by name
@@ -60,18 +59,13 @@ for FLDR in $FOLDERS; do
        # create a new folder
        NEW_FOLDER="$BASE_FOLDER_JIN/${DATASET_FOLDER_JIN}-${NEW_INDEX}"
 	FOLDERS+=($NEW_FOLDER)
-       	`ssh -p 902 yury@mcfp.felk.cvut.cz mkdir $NEW_FOLDER` 
-	echo "CREATED FOLDER"
-	echo $FILE
-	echo $NEW_FOLDER
-	`scp -P 902 -C $FILE yury@mcfp.felk.cvut.cz:$NEW_FOLDER`
-	echo "UPLOADED FILE"
-	`scp -P 902 -C $README yury@mcfp.felk.cvut.cz:$NEW_FOLDER`
-	echo "UPLOADED README"
-	`ssh -p 902 yury@mcfp.felk.cvut.cz ln -s $NEW_FOLDER ~/NonPublic/`
+       	`ssh -p 902 project@mcfp.felk.cvut.cz mkdir $NEW_FOLDER` 
+	echo "Uploading file $FILE to $NEW_FOLDER"
+	`scp -P 902 -C $FILE project@mcfp.felk.cvut.cz:$NEW_FOLDER`
+	`scp -P 902 -C $README project@mcfp.felk.cvut.cz:$NEW_FOLDER`
+	`ssh -p 902 project@mcfp.felk.cvut.cz ln -s $NEW_FOLDER ~/NonPublic/`
         NEW_INDEX=$((NEW_INDEX+1))
-	`ssh -p 902 yury@mcfp.felk.cvut.cz pcapsummarizer-iot.sh $NEW_FOLDER`
-	echo $NEW_FOLDER
+	`ssh -p 902 project@mcfp.felk.cvut.cz pcapsummarizer-iot.sh $NEW_FOLDER`
 	SIZE=`ls -lh $FILE|awk -F' ' '{print $5}'`
 	echo "$DATASET_FOLDER_JIN-$NEW_INDEX,$MD5,$STARTTIME,$ORIGIN_DEVICE,$DURATION,$IP,Yes,No,,$SIZE," >> $SCRIPT_DIR/report.csv;
     done 
