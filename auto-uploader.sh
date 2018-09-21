@@ -71,7 +71,7 @@ for FLDR in $FOLDERS; do
 	echo "Uploading file $FILE to $NEW_FOLDER"
 	`scp -P 902 -C $FILE project@mcfp.felk.cvut.cz:$NEW_FOLDER`
 	`scp -P 902 -C $README project@mcfp.felk.cvut.cz:$NEW_FOLDER`
-	`ssh -p 902 project@mcfp.felk.cvut.cz ln -s $NEW_FOLDER ~/NonPublic/`
+	`ssh -p 902 project@mcfp.felk.cvut.cz ln -s $NEW_FOLDER /opt/Malware-Project/Dataset/NonPublic/`
         NEW_INDEX=$((NEW_INDEX+1))
 	`ssh -p 902 project@mcfp.felk.cvut.cz pcapsummarizer-iot.sh $NEW_FOLDER`
 	SIZE=`ls -lh $FILE|awk -F' ' '{print $5}'`
