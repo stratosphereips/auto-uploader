@@ -21,6 +21,9 @@ DATASETS_FOLDER='/opt/Datasets'
 #cd $DATASETS
 # List folders in folder
 FOLDERS=`ls -d $DATASETS_FOLDER/*/`
+#BASE_FOLDER_JIN="/opt/Malware-Project/BigDataset/IoTScenarios/"
+BASE_FOLDER_JIN="~/Test/"
+
 
 for FLDR in $FOLDERS; do 
     #echo $FLDR
@@ -33,13 +36,15 @@ for FLDR in $FOLDERS; do
     STARTTIME=`cat $FLDR/$README|grep Start|awk -F'.' '{print $2}'`
     echo $STARTTIME
     # Get the dataset name in jin
+    DATASET_FOLDER_JIN=`cat $FLDR/$README | grep "Generic Dataset name"|awk -F': ' '{print $2}'`
     DATASET_FOLDER_JIN='CTU-IoT-Malware-Capture-8'
+    echo $DATASET_FOLDER_JIN
     # .... the rest...
     # Size of pcap do an ls -lh
     # Go to jin
     # The base folder is /opt/Malware-Project/BigDataset/IoTScenarios/
-    LAST_FOLDER=`ssh -p 902 project@mcfp.felk.cvut.cz ls -d /opt/Malware-Project/BigDataset/IoTScenarios/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
-    echo $FILES_IN_JIN
+    LAST_FOLDER=`ssh -p 902 yury@mcfp.felk.cvut.cz ls -d $BASE_FOLDER_JIN/$DATASET_FOLDER_JIN* | awk -F'/' '{print $6}' | sort -V | tail -1`
+    echo $LAST_FOLDER
     NEW_INDEX=`echo $LAST_FOLDER | awk -F'-' '{print $6+1}'`
     # sort ls by name
     # Find the last number used for my folder
@@ -50,18 +55,19 @@ for FLDR in $FOLDERS; do
     FOLDERS=()
     for FILE in $PCAP_FILES; do
        # create a new folder
-       NEW_FOLDER="/opt/Malware-Project/BigDataset/IoTScenarios/${DATASET_FOLDER_JIN}-${NEW_INDEX}"
+       NEW_FOLDER="$BASE_FOLDER_JIN/${DATASET_FOLDER_JIN}-${NEW_INDEX}"
 	FOLDERS+=($NEW_FOLDER)
-       	`ssh -p 902 project@mcfp.felk.cvut.cz mkdir $NEW_FOLDER` 
+       	`ssh -p 902 yury@mcfp.felk.cvut.cz mkdir $NEW_FOLDER` 
 	echo "CREATED FOLDER"
 	echo $FILE
 	echo $NEW_FOLDER
-	`scp -P 902 -C $FILE project@mcfp.felk.cvut.cz:$NEW_FOLDER`
+	`scp -P 902 -C $FILE yury@mcfp.felk.cvut.cz:$NEW_FOLDER`
 	echo "UPLOADED FILE"
-	`scp -P 902 -C $README project@mcfp.felk.cvut.cz:$NEW_FOLDER`
+	`scp -P 902 -C $README yury@mcfp.felk.cvut.cz:$NEW_FOLDER`
 	echo "UPLOADED README"
-	`ssh -p 902 project@mcfp.felk.cvut.cz ln -s $NEW_FOLDER /opt/Malware-Project/Dataset/NonPublic/$DATASET_FOLDER_JIN-$NEW_INDEX`
+	`ssh -p 902 yury@mcfp.felk.cvut.cz ln -s $NEW_FOLDER ~/NonPublic/`
         NEW_INDEX=$((NEW_INDEX+1))
+	`ssh -p 902 yury@mcfp.felk.cvut.cz pcapsummarizer-iot.sh $NEW_FOLDER`
 	echo $NEW_FOLDER
     done 
     # cp the pcap and the README.md. If more than one pcap in local folder, a new remote folder for each of them
