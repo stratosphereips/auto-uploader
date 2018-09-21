@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# The script goes over all folders in sniffy in /opt/Datasets and uploads pcaps to jin. Then the script creates a link to  /opt/Malware-Project/Dataset/NonPublic/
+# The script generates a report.csv with all the files and folders that have been created.
 # - In sniffy
     # Start in /opt/Datasets/
     # Get into each IoT folder
