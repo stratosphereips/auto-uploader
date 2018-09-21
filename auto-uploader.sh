@@ -29,6 +29,14 @@ for FLDR in $FOLDERS; do
     cd $FLDR
     # Extract from README.md
     README='README.md'
+    
+    if [ "$FLDR" = "lost+found" ]; then
+	    continue
+    fi
+
+    if [[ ! -f "$FLDR/$README" ]]; then
+	    continue
+    fi
     # Check if exists..
     MD5=`cat $FLDR/$README|grep MD5|awk -F':' '{print $2}'`
     echo $MD5
@@ -39,7 +47,7 @@ for FLDR in $FOLDERS; do
     ORIGIN_DEVICE=`cat $FLDR/$README|grep "Origin device"|awk -F': ' '{print $2}'`
     # Get the dataset name in jin
     DATASET_FOLDER_JIN=`cat $FLDR/$README | grep "Generic Dataset name"|awk -F': ' '{print $2}'`
-    DATASET_FOLDER_JIN='CTU-IoT-Malware-Capture-8'
+   # DATASET_FOLDER_JIN='CTU-IoT-Malware-Capture-8'
     echo $DATASET_FOLDER_JIN
     # .... the rest...
     # Size of pcap do an ls -lh
