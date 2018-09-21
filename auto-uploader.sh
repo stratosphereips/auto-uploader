@@ -16,7 +16,7 @@
     # Run the pcapsummarizer-iot
     # Link the folder in avast folder non-public
     # Print a CSV summary of all the moved pcaps to put in the spreadsheet
-
+SCRIPT_DIR=`pwd`
 DATASETS_FOLDER='/opt/Datasets'
 #cd $DATASETS
 # List folders in folder
@@ -35,6 +35,9 @@ for FLDR in $FOLDERS; do
     echo $MD5
     STARTTIME=`cat $FLDR/$README|grep Start|awk -F'.' '{print $2}'`
     echo $STARTTIME
+    DURATION=`cat $FLDR/$README|grep Duration|awk -F':' '{print $2}'`
+    IP=`cat $FLDR/$README|grep "Infected device"|awk -F': ' '{print $2}'`
+    ORIGIN_DEVICE=`cat $FLDR/$README|grep "Origin device"|awk -F': ' '{print $2}'`
     # Get the dataset name in jin
     DATASET_FOLDER_JIN=`cat $FLDR/$README | grep "Generic Dataset name"|awk -F': ' '{print $2}'`
     DATASET_FOLDER_JIN='CTU-IoT-Malware-Capture-8'
@@ -69,6 +72,8 @@ for FLDR in $FOLDERS; do
         NEW_INDEX=$((NEW_INDEX+1))
 	`ssh -p 902 yury@mcfp.felk.cvut.cz pcapsummarizer-iot.sh $NEW_FOLDER`
 	echo $NEW_FOLDER
+	SIZE=`ls -lh $FILE|awk -F' ' '{print $5}'`
+	echo "$DATASET_FOLDER_JIN-$NEW_INDEX,$MD5,$STARTTIME,$ORIGIN_DEVICE,$DURATION,$IP,Yes,No,,$SIZE," >> $SCRIPT_DIR/report.csv;
     done 
     # cp the pcap and the README.md. If more than one pcap in local folder, a new remote folder for each of them
         # scp -C 
@@ -81,11 +86,3 @@ done
 
 # To print a CSV with all the info
 # Name of Dataset,MD5 Malware,Date of launch,Origin Device,Duration (days), IP,Shared with Avast,Analyzed, Label, Size (GB), Notes
-
-
-
-
-
-
-
-
