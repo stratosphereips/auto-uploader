@@ -22,7 +22,7 @@ DATASETS_FOLDER='/opt/Datasets'
 #cd $DATASETS
 # List folders in folder
 FOLDERS=`ls -d $DATASETS_FOLDER/*/`
-BASE_FOLDER_JIN="/opt/Malware-Project/BigDataset/IoTScenarios/"
+BASE_FOLDER_JIN="/opt/Malware-Project/BigDataset/IoTScenarios"
 #BASE_FOLDER_JIN="~/Test/"
 
 
